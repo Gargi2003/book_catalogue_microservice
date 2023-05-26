@@ -10,6 +10,11 @@ import (
 
 var logger zerolog.Logger
 
+// @Summary Get all books
+// @Description Get all books from the database
+// @Produce json
+// @Success 200 {array} Books
+// @Router /getBooks [get]
 func GetBooks(c *gin.Context) {
 	db, err := DbConn(username, password, dbname, port)
 	if err != nil {
@@ -21,6 +26,12 @@ func GetBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
+// @Summary Get books by author
+// @Description Get books by author from the database
+// @Produce json
+// @Param author query string true "Author name"
+// @Success 200 {array} Books
+// @Router /getBooksByAuthor [get]
 func GetBookbyAuthor(c *gin.Context) {
 	db, err := DbConn(username, password, dbname, port)
 	if err != nil {
@@ -33,6 +44,12 @@ func GetBookbyAuthor(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
+// @Summary Get book by ID
+// @Description Get a book by ID from the database
+// @Produce json
+// @Param id query string true "Book ID"
+// @Success 200 {array} Books
+// @Router /getBooksById [get]
 func GetBookById(c *gin.Context) {
 	db, err := DbConn(username, password, dbname, port)
 	if err != nil {
