@@ -7,9 +7,23 @@ import (
 )
 
 type Request struct {
-	Books []Books `json:"books"`
+	Books []struct {
+		Title  string `json:"title" binding:"required"`
+		Author string `json:"author" binding:"required"`
+		YOP    int    `json:"publication_year" binding:"required"`
+		ISBN   string `json:"isbn" binding:"required"`
+	} `json:"books" binding:"required"`
 }
 
+// AddBooks adds books to the database
+// @Summary Add books
+// @Description Add books to the database
+// @Accept json
+// @Produce json
+// @Param request body Request true "Request object containing books"
+// @Success 200 {string} string "Books added successfully"
+// @Failure 500 {object} string "Internal server error"
+// @Router /addBook [post]
 func AddBooks(c *gin.Context) {
 	db, err := DbConn(username, password, dbname, port)
 	if err != nil {

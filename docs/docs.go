@@ -16,6 +16,43 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/addBook": {
+            "post": {
+                "description": "Add books to the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add books",
+                "parameters": [
+                    {
+                        "description": "Request object containing books",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/cmd.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Books added successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/getBooks": {
             "get": {
                 "description": "Get all books from the database",
@@ -113,6 +150,40 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "cmd.Request": {
+            "type": "object",
+            "required": [
+                "books"
+            ],
+            "properties": {
+                "books": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "author",
+                            "isbn",
+                            "publication_year",
+                            "title"
+                        ],
+                        "properties": {
+                            "author": {
+                                "type": "string"
+                            },
+                            "isbn": {
+                                "type": "string"
+                            },
+                            "publication_year": {
+                                "type": "integer"
+                            },
+                            "title": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         }

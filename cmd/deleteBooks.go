@@ -15,13 +15,23 @@ func DeleteBook(c *gin.Context) {
 	}
 	defer db.Close()
 	id := c.Query("id")
-	rows, err1 := db.Query(deleteQuery, id)
-	if err1 != nil {
-		logger.Err(err).Msgf("Error occurred while executing query %s", deleteQuery)
-	}
-	if !rows.Next() {
-		c.JSON(http.StatusNotFound, "No matching elements found witht the given id")
+	result, err := db.Exec(deleteQuery, id)
+	if err != nil {
+		logger.Err(err).Msgf("Error occurred while executing query: %s", deleteQuery)
+		c.JSON(http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
-	c.JSON(http.StatusOK, "Books deleted successfully!!!")
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		logger.Err(err).Msg("Error occurred while getting the number of affected rows")
+		c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		return
+	}
+	if rowsAffected == 0 {
+		c.JSON(http.StatusNotFound, "Book not found")
+		return
+	}
+
+	c.JSON(http.StatusOK, "Book deleted successfully!!!")
+
 }

@@ -12,6 +12,29 @@ definitions:
       title:
         type: string
     type: object
+  cmd.Request:
+    properties:
+      books:
+        items:
+          properties:
+            author:
+              type: string
+            isbn:
+              type: string
+            publication_year:
+              type: integer
+            title:
+              type: string
+          required:
+          - author
+          - isbn
+          - publication_year
+          - title
+          type: object
+        type: array
+    required:
+    - books
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -19,6 +42,30 @@ info:
   title: Book Catalogue APIs
   version: "1.0"
 paths:
+  /addBook:
+    post:
+      consumes:
+      - application/json
+      description: Add books to the database
+      parameters:
+      - description: Request object containing books
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/cmd.Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Books added successfully
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Add books
   /getBooks:
     get:
       description: Get all books from the database
