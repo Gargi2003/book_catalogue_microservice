@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,18 +15,45 @@ func GetBooks(c *gin.Context) {
 	if err != nil {
 		logger.Err(err).Msg("error connecting to db. ")
 	}
-
+	defer db.Close()
 	rows, _ := db.Query("select * from books")
+	books := parseRows(rows)
+	c.JSON(http.StatusOK, books)
+}
 
+func GetBookbyAuthor(c *gin.Context) {
+	db, err := DbConn(username, password, dbname, port)
+	if err != nil {
+		logger.Err(err).Msg("error connecting to db. ")
+	}
+	defer db.Close()
+	author := c.Query("author")
+	rows, _ := db.Query("select * from books where author=?", author)
+	books := parseRows(rows)
+	c.JSON(http.StatusOK, books)
+}
+
+func GetBookById(c *gin.Context) {
+	db, err := DbConn(username, password, dbname, port)
+	if err != nil {
+		logger.Err(err).Msg("error connecting to db. ")
+	}
+	defer db.Close()
+	id := c.Query("id")
+	rows, _ := db.Query("select * from books where id=?", id)
+	books := parseRows(rows)
+	c.JSON(http.StatusOK, books)
+}
+
+func parseRows(rows *sql.Rows) *[]Books {
 	var books []Books
 	for rows.Next() {
 		var book Books
-		err := rows.Scan(&book.ID, &book.Title, &book.Author, book.YOP, &book.ISBN)
+		err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.YOP, &book.ISBN)
 		if err != nil {
 			logger.Err(err).Msg("Error parsing books in database")
 		}
 		books = append(books, book)
 	}
-	defer db.Close()
-	c.JSON(http.StatusOK, books)
+	return &books
 }
