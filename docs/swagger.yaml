@@ -12,6 +12,24 @@ definitions:
       title:
         type: string
     type: object
+  cmd.PatchRequest:
+    properties:
+      books:
+        items:
+          properties:
+            author:
+              type: string
+            isbn:
+              type: string
+            publication_year:
+              type: integer
+            title:
+              type: string
+          type: object
+        type: array
+    required:
+    - books
+    type: object
   cmd.Request:
     properties:
       books:
@@ -66,6 +84,37 @@ paths:
           schema:
             type: string
       summary: Add books
+      tags:
+      - Books
+  /deleteBook:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a book from the database by its ID
+      parameters:
+      - description: ID of the book to delete
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Book deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Book not found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete Book
+      tags:
+      - Books
   /getBooks:
     get:
       description: Get all books from the database
@@ -79,6 +128,8 @@ paths:
               $ref: '#/definitions/cmd.Books'
             type: array
       summary: Get all books
+      tags:
+      - Books
   /getBooksByAuthor:
     get:
       description: Get books by author from the database
@@ -98,6 +149,8 @@ paths:
               $ref: '#/definitions/cmd.Books'
             type: array
       summary: Get books by author
+      tags:
+      - Books
   /getBooksById:
     get:
       description: Get a book by ID from the database
@@ -117,4 +170,68 @@ paths:
               $ref: '#/definitions/cmd.Books'
             type: array
       summary: Get book by ID
+      tags:
+      - Books
+  /replaceBook:
+    patch:
+      consumes:
+      - application/json
+      description: Replace the fields of a book in the database by its ID
+      parameters:
+      - description: ID of the book to replace
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: Book fields to replace
+        in: body
+        name: books
+        required: true
+        schema:
+          $ref: '#/definitions/cmd.PatchRequest'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Book replaced successfully
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Replace Book
+      tags:
+      - Books
+  /updateBook:
+    put:
+      consumes:
+      - application/json
+      description: Update multiple books in the database by their ID
+      parameters:
+      - description: ID of the books to update
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: Books to update
+        in: body
+        name: books
+        required: true
+        schema:
+          $ref: '#/definitions/cmd.Request'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Books updated successfully
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update Books
+      tags:
+      - Books
 swagger: "2.0"

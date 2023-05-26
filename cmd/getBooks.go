@@ -13,6 +13,7 @@ var logger zerolog.Logger
 // @Summary Get all books
 // @Description Get all books from the database
 // @Produce json
+// @Tags Books
 // @Success 200 {array} Books
 // @Router /getBooks [get]
 func GetBooks(c *gin.Context) {
@@ -29,6 +30,7 @@ func GetBooks(c *gin.Context) {
 // @Summary Get books by author
 // @Description Get books by author from the database
 // @Produce json
+// @Tags Books
 // @Param author query string true "Author name"
 // @Success 200 {array} Books
 // @Router /getBooksByAuthor [get]
@@ -47,6 +49,7 @@ func GetBookbyAuthor(c *gin.Context) {
 // @Summary Get book by ID
 // @Description Get a book by ID from the database
 // @Produce json
+// @Tags Books
 // @Param id query string true "Book ID"
 // @Success 200 {array} Books
 // @Router /getBooksById [get]

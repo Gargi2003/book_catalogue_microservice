@@ -8,6 +8,17 @@ import (
 
 const deleteQuery = "delete from books where id=?"
 
+// DeleteBook deletes a book by its ID.
+// @Summary Delete Book
+// @Description Delete a book from the database by its ID
+// @Tags Books
+// @Accept json
+// @Produce json
+// @Param id query string true "ID of the book to delete"
+// @Success 200 {string} string "Book deleted successfully"
+// @Failure 404 {string} string "Book not found"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /deleteBook [delete]
 func DeleteBook(c *gin.Context) {
 	db, err := DbConn(username, password, dbname, port)
 	if err != nil {

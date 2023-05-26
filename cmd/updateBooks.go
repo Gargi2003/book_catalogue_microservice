@@ -8,6 +8,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type PatchRequest struct {
+	Books []struct {
+		Title  string `json:"title" `
+		Author string `json:"author" `
+		YOP    int    `json:"publication_year"`
+		ISBN   string `json:"isbn"`
+	} `json:"books" binding:"required"`
+}
+
+// UpdateBooks updates multiple books in the database.
+// @Summary Update Books
+// @Description Update multiple books in the database by their ID
+// @Tags Books
+// @Accept json
+// @Produce json
+// @Param id query string true "ID of the books to update"
+// @Param books body Request true "Books to update"
+// @Success 202 {string} string "Books updated successfully"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /updateBook [put]
 func UpdateBooks(c *gin.Context) {
 	db, err := DbConn(username, password, dbname, port)
 	if err != nil {
@@ -33,6 +53,17 @@ func UpdateBooks(c *gin.Context) {
 	c.JSON(http.StatusAccepted, "Book updated successfully!!!")
 }
 
+// ReplaceBooks replaces the fields of a book in the database.
+// @Summary Replace Book
+// @Description Replace the fields of a book in the database by its ID
+// @Tags Books
+// @Accept json
+// @Produce json
+// @Param id query string true "ID of the book to replace"
+// @Param books body PatchRequest true "Book fields to replace"
+// @Success 202 {string} string "Book replaced successfully"
+// @Failure 500 {string} string "Internal Server Error"
+// @Router /replaceBook [patch]
 func ReplaceBooks(c *gin.Context) {
 	db, err := DbConn(username, password, dbname, port)
 	if err != nil {
@@ -41,7 +72,7 @@ func ReplaceBooks(c *gin.Context) {
 		return
 	}
 	defer db.Close()
-	req := &Request{}
+	req := &PatchRequest{}
 	if err := c.BindJSON(req); err != nil {
 		logger.Err(err).Msg("error binding to json object")
 		c.JSON(http.StatusInternalServerError, err)

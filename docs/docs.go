@@ -25,6 +25,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Books"
+                ],
                 "summary": "Add books",
                 "parameters": [
                     {
@@ -53,11 +56,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/deleteBook": {
+            "delete": {
+                "description": "Delete a book from the database by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Delete Book",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the book to delete",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Book deleted successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Book not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/getBooks": {
             "get": {
                 "description": "Get all books from the database",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Books"
                 ],
                 "summary": "Get all books",
                 "responses": {
@@ -78,6 +128,9 @@ const docTemplate = `{
                 "description": "Get books by author from the database",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Books"
                 ],
                 "summary": "Get books by author",
                 "parameters": [
@@ -108,6 +161,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Books"
+                ],
                 "summary": "Get book by ID",
                 "parameters": [
                     {
@@ -126,6 +182,100 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/cmd.Books"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/replaceBook": {
+            "patch": {
+                "description": "Replace the fields of a book in the database by its ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Replace Book",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the book to replace",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "Book fields to replace",
+                        "name": "books",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/cmd.PatchRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Book replaced successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/updateBook": {
+            "put": {
+                "description": "Update multiple books in the database by their ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Update Books",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID of the books to update",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "Books to update",
+                        "name": "books",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/cmd.Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Books updated successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -150,6 +300,34 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                }
+            }
+        },
+        "cmd.PatchRequest": {
+            "type": "object",
+            "required": [
+                "books"
+            ],
+            "properties": {
+                "books": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "author": {
+                                "type": "string"
+                            },
+                            "isbn": {
+                                "type": "string"
+                            },
+                            "publication_year": {
+                                "type": "integer"
+                            },
+                            "title": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             }
         },

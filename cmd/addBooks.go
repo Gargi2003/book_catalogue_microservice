@@ -20,6 +20,7 @@ type Request struct {
 // @Description Add books to the database
 // @Accept json
 // @Produce json
+// @Tags Books
 // @Param request body Request true "Request object containing books"
 // @Success 200 {string} string "Books added successfully"
 // @Failure 500 {object} string "Internal server error"
