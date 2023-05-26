@@ -16,6 +16,8 @@ func main() {
 	router.GET("/getBooksById", handlers.GetBookById)
 	router.DELETE("/deleteBook", handlers.DeleteBook)
 	router.POST("/addBook", handlers.AddBooks)
+	router.PUT("/updateBook", handlers.UpdateBooks)
+	router.PATCH("/replaceBook", handlers.ReplaceBooks)
 	router.Run(":8080")
 
 }
